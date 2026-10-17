@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, type RefObject } from "react";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion, MotionConfig } from "motion/react";
 
 export type TeamMember = {
   id: string;
@@ -9,6 +9,7 @@ export type TeamMember = {
   role: string;
   initials: string;
   email: string;
+  category: "developer" | "media";
 };
 
 const CloseIcon = () => (
@@ -115,6 +116,7 @@ export default function TeamMemberModal({ member, onClose, triggerRef }: Props) 
   }, [member, onClose, triggerRef]);
 
   return (
+    <MotionConfig reducedMotion="user">
     <AnimatePresence>
       {member && (
         <motion.div
@@ -228,5 +230,6 @@ export default function TeamMemberModal({ member, onClose, triggerRef }: Props) 
         </motion.div>
       )}
     </AnimatePresence>
+    </MotionConfig>
   );
 }
