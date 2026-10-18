@@ -38,6 +38,7 @@ const history: HistoryItem[] = [
   {
     name: "Devspectra",
     period: "2025 - now",
+    image: "/logo-devspectra.jpeg",
     description: "Berdiri resmi sebagai badan hukum PT Devspectra Digital Kreasi.",
     initials: "DS",
     gradient: "from-blue-500 to-cyan-400",
@@ -227,7 +228,7 @@ export default function Home() {
                 as="article"
                 variant="scale"
                 delay={i * 120}
-                className="group overflow-hidden rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50/80 dark:bg-zinc-900/40 transition-all duration-300 hover:-translate-y-1 hover:border-zinc-300 dark:hover:border-zinc-700 hover:shadow-xl hover:shadow-zinc-200/40 dark:hover:shadow-black/40"
+                className="group overflow-hidden rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50/80 dark:bg-zinc-900/40 transition-all duration-300 hover:-translate-y-1 hover:border-blue-300 dark:hover:border-blue-700/60 hover:bg-zinc-100 dark:hover:bg-zinc-900/70 hover:shadow-lg"
               >
                 {/* Logo area */}
                 <div className="flex aspect-[16/9] w-full items-center justify-center bg-zinc-100/60 dark:bg-zinc-800/40 overflow-hidden">
