@@ -10,6 +10,8 @@ export type TeamMember = {
   initials: string;
   email: string;
   category: "developer" | "media";
+  /** false = sembunyikan dari dropdown Anggota Tim di form Contact (misal: Owner) */
+  contactVisible?: boolean;
 };
 
 const CloseIcon = () => (

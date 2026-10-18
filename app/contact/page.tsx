@@ -58,12 +58,15 @@ const SERVICE_OPTIONS = [
   "Desain",
   "Fotografer",
   "Videografer",
-];
+] as const;
+
+type ServiceOption = (typeof SERVICE_OPTIONS)[number];
 
 // Maps each service to its team category, driving which members appear in the
 // "Anggota Tim" dropdown. Developer services → dev members; media services →
-// media/creative members.
-const SERVICE_CATEGORY: Record<string, "developer" | "media"> = {
+// media/creative members. Typed as Record<ServiceOption,...> so any new entry
+// in SERVICE_OPTIONS that is not mapped here will produce a compile-time error.
+const SERVICE_CATEGORY: Record<ServiceOption, "developer" | "media"> = {
   Mobile: "developer",
   Web: "developer",
   "Deploy Website": "developer",
@@ -83,6 +86,9 @@ export default function Contact() {
   const [savedName, setSavedName] = useState("");
   const [savedSubject, setSavedSubject] = useState("");
   const [savedWhatsapp, setSavedWhatsapp] = useState("");
+  const [savedEmail, setSavedEmail] = useState("");
+  const [savedJasa, setSavedJasa] = useState("");
+  const [savedAnggota, setSavedAnggota] = useState("");
 
   // Review / rating state
   const [reviewForm, setReviewForm] = useState({ name: "", rating: 0, comment: "" });
@@ -141,6 +147,9 @@ export default function Contact() {
       setSavedName(form.name);
       setSavedSubject(form.subject);
       setSavedWhatsapp(form.whatsapp);
+      setSavedEmail(form.email);
+      setSavedJasa(form.jasa);
+      setSavedAnggota(form.anggota);
       setForm({ name: "", email: "", whatsapp: "", subject: "", message: "", date: "", jasa: "", anggota: "" });
     } catch (err) {
       setErrorMsg(err instanceof Error ? err.message : "Terjadi kesalahan.");
@@ -182,7 +191,10 @@ export default function Contact() {
       `ID Pesanan: ${orderId}\n` +
       `Nama: ${savedName || "-"}\n` +
       `Subject: ${savedSubject || "-"}\n` +
+      (savedEmail ? `E-Mail: ${savedEmail}\n` : "") +
       (savedWhatsapp ? `No. WA Saya: +62${savedWhatsapp}\n` : "") +
+      (savedJasa ? `Jasa: ${savedJasa}\n` : "") +
+      (savedAnggota ? `Anggota Tim: ${savedAnggota}\n` : "") +
       `\nMohon konfirmasinya. Terima kasih!`
     );
     const waUrl = `https://wa.me/${WA_NUMBER}?text=${waMessage}`;
@@ -226,7 +238,7 @@ export default function Contact() {
 
             <button
               type="button"
-              onClick={() => { setStatus("idle"); setOrderId(""); setSavedName(""); setSavedSubject(""); }}
+              onClick={() => { setStatus("idle"); setOrderId(""); setSavedName(""); setSavedSubject(""); setSavedEmail(""); setSavedJasa(""); setSavedAnggota(""); }}
               className="mt-4 rounded-lg border border-zinc-300 dark:border-zinc-700 bg-zinc-100 dark:bg-zinc-900 px-6 py-2.5 text-sm font-medium text-zinc-600 dark:text-zinc-300 transition hover:border-zinc-400 dark:hover:border-zinc-600 hover:text-zinc-900 dark:hover:text-zinc-100"
             >
               Kirim pesan lain
@@ -239,9 +251,12 @@ export default function Contact() {
 
   // Team members shown in the "Anggota Tim" dropdown, filtered by the selected
   // service's category. Empty until a Jasa is chosen.
-  const availableMembers = form.jasa
-    ? team.filter((m) => m.category === SERVICE_CATEGORY[form.jasa])
-    : [];
+  const isValidService = (s: string): s is ServiceOption =>
+    SERVICE_OPTIONS.includes(s as ServiceOption);
+  const availableMembers =
+    form.jasa && isValidService(form.jasa)
+      ? team.filter((m) => m.category === SERVICE_CATEGORY[form.jasa as ServiceOption] && m.contactVisible !== false)
+      : [];
 
   /* ── Form state ────────────────────────────────────────── */
   return (
