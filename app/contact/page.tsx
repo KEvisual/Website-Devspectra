@@ -1,12 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { contactPageStyles as c } from "@/public/dummyStyles";
 import Reveal from "@/app/components/Reveal";
 import StarRating from "@/app/components/StarRating";
 import { REVIEWS_KEY } from "@/app/components/TestimonialsCarousel";
 import { createInquiry } from "@/app/lib/api";
 import { team } from "@/data/team";
+import { upsertOrder, getOrder, type Order } from "@/app/lib/orders";
 
 const TikTokIcon = ({ className }: { className?: string }) => (
   <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" className={className}>
@@ -94,6 +96,11 @@ export default function Contact() {
   const [reviewForm, setReviewForm] = useState({ name: "", rating: 0, comment: "" });
   const [reviewStatus, setReviewStatus] = useState<ReviewStatus>("idle");
 
+  // QRIS payment check state
+  const [qrisOpen, setQrisOpen] = useState(false);
+  const [qrisOrderId, setQrisOrderId] = useState("");
+  const [qrisResult, setQrisResult] = useState<Order | null | "notfound">(null);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
@@ -144,6 +151,7 @@ export default function Contact() {
 
       setOrderId(data.orderId ?? "");
       setStatus("success");
+      upsertOrder({ orderId: data.orderId ?? "", status: "pending", name: form.name, jasa: form.jasa || undefined });
       setSavedName(form.name);
       setSavedSubject(form.subject);
       setSavedWhatsapp(form.whatsapp);
@@ -591,6 +599,91 @@ export default function Contact() {
                     {reviewStatus === "loading" ? "Mengirim..." : "Kirim Penilaian"}
                   </button>
                 </form>
+              )}
+            </div>
+          </Reveal>
+
+          {/* ── QRIS Payment Section ── */}
+          <Reveal variant="scale" delay={150} className="mt-8 w-full">
+            <div className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/40 overflow-hidden">
+              {/* Collapsible header */}
+              <button
+                type="button"
+                onClick={() => setQrisOpen((prev) => !prev)}
+                className="flex w-full items-center justify-between px-6 py-4 text-left transition hover:bg-zinc-100 dark:hover:bg-zinc-800/40"
+              >
+                <div>
+                  <h3 className="text-base font-bold text-zinc-900 dark:text-zinc-100">💳 Pembayaran QRIS</h3>
+                  <p className="mt-0.5 text-sm text-zinc-500 dark:text-zinc-400">Cek status pembayaran setelah proyek selesai.</p>
+                </div>
+                <ChevronDownIcon
+                  className={`h-5 w-5 text-zinc-400 transition-transform duration-200 ${
+                    qrisOpen ? "rotate-180" : ""
+                  }`}
+                />
+              </button>
+
+              {/* Collapsible body */}
+              {qrisOpen && (
+                <div className="border-t border-zinc-200 dark:border-zinc-800 px-6 py-6 space-y-4">
+                  <div className="flex gap-3">
+                    <input
+                      type="text"
+                      value={qrisOrderId}
+                      onChange={(e) => setQrisOrderId(e.target.value)}
+                      placeholder="Masukkan Order ID, contoh: DSP-BLM5XPQO"
+                      className="flex-1 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 px-4 py-3 text-sm text-zinc-900 dark:text-zinc-100 outline-none transition placeholder:text-zinc-400 dark:placeholder:text-zinc-500 focus:border-zinc-400 dark:focus:border-zinc-600 focus:ring-1 focus:ring-zinc-400 dark:focus:ring-zinc-600"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const found = getOrder(qrisOrderId.trim());
+                        setQrisResult(found ?? "notfound");
+                      }}
+                      className="rounded-xl bg-zinc-900 dark:bg-zinc-100 px-5 py-3 text-sm font-semibold text-zinc-100 dark:text-zinc-900 transition-all hover:bg-zinc-700 dark:hover:bg-zinc-200 active:scale-95"
+                    >
+                      Cek Status
+                    </button>
+                  </div>
+
+                  {/* Result: not found or pending */}
+                  {qrisResult !== null && (qrisResult === "notfound" || qrisResult.status === "pending") && (
+                    <div className="rounded-xl border border-amber-200 dark:border-amber-800/50 bg-amber-50 dark:bg-amber-950/30 px-4 py-3">
+                      <p className="text-sm text-amber-700 dark:text-amber-400">
+                        ⏳ Proyek Anda sedang diproses. QRIS akan muncul setelah admin mengkonfirmasi selesai.
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Result: completed — show QRIS image */}
+                  {qrisResult !== null && qrisResult !== "notfound" && qrisResult.status === "completed" && (
+                    <div className="flex flex-col items-center gap-4 pt-2">
+                      <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                        Scan QRIS untuk melakukan pembayaran
+                      </p>
+                      <Image
+                        src="/qris.jpeg"
+                        alt="QRIS Devspectra Digital Kreasi"
+                        width={320}
+                        height={420}
+                        className="rounded-2xl shadow-xl"
+                      />
+                      <p className="text-xs text-zinc-500 dark:text-zinc-400 text-center">
+                        DEVSPECTRA DIGITAL KREASI · GoPay, BCA, Mandiri, BNI, BRI dan bank lainnya
+                      </p>
+                      {qrisResult.completedAt && (
+                        <p className="text-xs text-zinc-500 dark:text-zinc-400">
+                          Selesai:{" "}
+                          {new Date(qrisResult.completedAt).toLocaleDateString("id-ID", {
+                            day: "numeric",
+                            month: "long",
+                            year: "numeric",
+                          })}
+                        </p>
+                      )}
+                    </div>
+                  )}
+                </div>
               )}
             </div>
           </Reveal>

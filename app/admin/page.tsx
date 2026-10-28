@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { getSession, clearSession, type SessionData } from "@/app/lib/api";
 import LiveClock from "@/app/components/LiveClock";
+import { getOrders, markOrderCompleted, type Order } from "@/app/lib/orders";
 
 const quickLinks = [
   { label: "Beranda",    href: "/",           icon: "🌐" },
@@ -19,6 +20,9 @@ const quickLinks = [
 export default function AdminPage() {
   const router = useRouter();
   const [session, setSession] = useState<SessionData | null>(null);
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [markId, setMarkId] = useState("");
+  const [markMsg, setMarkMsg] = useState("");
 
   useEffect(() => {
     const s = getSession();
@@ -26,9 +30,23 @@ export default function AdminPage() {
     setSession(s);
   }, [router]);
 
+  useEffect(() => {
+    setOrders(getOrders());
+  }, []);
+
   const handleLogout = () => {
     clearSession();
     router.push("/login");
+  };
+
+  const handleMarkComplete = () => {
+    const id = markId.trim();
+    if (!id) return;
+    markOrderCompleted(id);
+    setOrders(getOrders());
+    setMarkMsg(`Order ${id} berhasil ditandai selesai. QRIS sudah aktif untuk user.`);
+    setMarkId("");
+    setTimeout(() => setMarkMsg(""), 5000);
   };
 
   if (!session) return null;
@@ -142,6 +160,67 @@ export default function AdminPage() {
               <span className="font-medium text-zinc-800 dark:text-zinc-200">{row.value}</span>
             </div>
           ))}
+        </div>
+      </div>
+
+      {/* ── Tandai Proyek Selesai ── */}
+      <div className="mt-8 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white/70 dark:bg-zinc-900/50 p-6">
+        <h2 className="mb-4 text-base font-bold text-zinc-900 dark:text-zinc-100">📦 Tandai Proyek Selesai</h2>
+
+        <div className="flex gap-3">
+          <input
+            type="text"
+            value={markId}
+            onChange={(e) => setMarkId(e.target.value)}
+            placeholder="Masukkan Order ID, contoh: DSP-BLM5XPQO"
+            className="flex-1 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 px-4 py-3 text-sm text-zinc-900 dark:text-zinc-100 outline-none transition placeholder:text-zinc-400 dark:placeholder:text-zinc-500 focus:border-zinc-400 dark:focus:border-zinc-600 focus:ring-1 focus:ring-zinc-400 dark:focus:ring-zinc-600"
+          />
+          <button
+            type="button"
+            onClick={handleMarkComplete}
+            className="rounded-xl bg-emerald-600 px-5 py-3 text-sm font-semibold text-white transition-all hover:bg-emerald-500 active:scale-95"
+          >
+            ✅ Tandai Selesai
+          </button>
+        </div>
+
+        {markMsg && (
+          <div className="mt-3 rounded-xl border border-emerald-200 dark:border-emerald-800/50 bg-emerald-50 dark:bg-emerald-950/30 px-4 py-3">
+            <p className="text-sm text-emerald-700 dark:text-emerald-400">{markMsg}</p>
+          </div>
+        )}
+
+        {/* Order list */}
+        <div className="mt-6 space-y-3">
+          <h3 className="text-sm font-semibold text-zinc-700 dark:text-zinc-300">Semua Order</h3>
+          {orders.length === 0 ? (
+            <p className="text-sm text-zinc-400 dark:text-zinc-500">Belum ada order tersimpan.</p>
+          ) : (
+            orders.map((o) => (
+              <div
+                key={o.orderId}
+                className="flex flex-wrap items-center gap-3 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/40 px-4 py-3 text-sm"
+              >
+                <span className="font-mono font-semibold text-zinc-800 dark:text-zinc-200">{o.orderId}</span>
+                {o.name && <span className="text-zinc-600 dark:text-zinc-400">{o.name}</span>}
+                {o.jasa && <span className="text-zinc-500 dark:text-zinc-500">{o.jasa}</span>}
+                <span
+                  className={`ml-auto rounded-full px-2.5 py-0.5 text-xs font-semibold ${
+                    o.status === "completed"
+                      ? "bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300"
+                      : "bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300"
+                  }`}
+                >
+                  {o.status === "completed" ? "Selesai" : "Pending"}
+                </span>
+                {o.completedAt && (
+                  <span className="w-full text-xs text-zinc-400 dark:text-zinc-500">
+                    Selesai: {new Date(o.completedAt).toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" })}
+                  </span>
+                )}
+              </div>
+            ))
+          )}
         </div>
       </div>
     </div>
