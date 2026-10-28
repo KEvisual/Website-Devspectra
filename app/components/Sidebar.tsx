@@ -9,6 +9,7 @@ import { TypingAnimation } from "@/app/components/ui/typing-animation-demo-3"
 import ThemeToggle from "@/app/components/ThemeToggle"
 import LogoLink from "@/app/components/LogoLink"
 import ProjectFilter from "@/app/components/ProjectFilter"
+import DivisiFilter from "@/app/components/DivisiFilter"
 import SidebarAuth from "@/app/components/SidebarAuth"
 
 
@@ -68,6 +69,12 @@ const ToolsIcon = ({ className, ...props }: IconProps) => (
   </svg>
 );
 
+const DivisiIcon = ({ className, ...props }: IconProps) => (
+  <svg viewBox="0 0 24 24" fill="none" strokeWidth={2} stroke="currentColor" aria-hidden="true" className={className} {...props}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 0 0-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.272-.356-1.857M7 20H2v-2a3 3 0 0 1 5.356-1.857M7 20v-2c0-.656.126-1.272.356-1.857m0 0a5.002 5.002 0 0 1 9.288 0M15 7a3 3 0 1 1-6 0 3 3 0 0 1 6 0zm6 3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM7 10a2 2 0 1 1-4 0 2 2 0 0 1 4 0z" />
+  </svg>
+);
+
 export default function Sidebar(): React.ReactElement {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const pathname = usePathname();
@@ -95,6 +102,7 @@ export default function Sidebar(): React.ReactElement {
      const navItems: { href: string; label: string; Icon: React.ComponentType<IconProps> }[] = [
     { href: "/", label: "Home", Icon: HomeIcon },
     { href: "/projects", label: "Projects", Icon: ProjectsIcon },
+    { href: "/divisi", label: "Divisi", Icon: DivisiIcon },
     { href: "/experience", label: "Pencapaian", Icon: ExperienceIcon },
     { href: "/tools", label: "Tools", Icon: ToolsIcon },
     { href: "/about", label: "About", Icon: UserIcon },
@@ -165,6 +173,17 @@ export default function Sidebar(): React.ReactElement {
                           <li key={href}>
                             {href === "/projects" ? (
                               <ProjectFilter
+                                href={href}
+                                label={label}
+                                Icon={Icon}
+                                navItem={s.navItem}
+                                navItemActive={s.navItemActive}
+                                navItemInactive={s.navItemInactive}
+                                navIcon={s.navIcon}
+                                navLabel={s.navLabel}
+                              />
+                            ) : href === "/divisi" ? (
+                              <DivisiFilter
                                 href={href}
                                 label={label}
                                 Icon={Icon}
@@ -257,6 +276,17 @@ export default function Sidebar(): React.ReactElement {
                     <li key={href}>
                       {href === "/projects" ? (
                         <ProjectFilter
+                          href={href}
+                          label={label}
+                          Icon={Icon}
+                          navItem={s.mobileNavItem}
+                          navItemActive={s.navItemActive}
+                          navItemInactive={s.navItemInactive}
+                          navIcon={s.mobileNavIcon}
+                          navLabel={s.mobileNavLabel}
+                        />
+                      ) : href === "/divisi" ? (
+                        <DivisiFilter
                           href={href}
                           label={label}
                           Icon={Icon}

@@ -418,7 +418,7 @@ export const sidebarStyles = {
   bottomNavContainer: "mx-auto w-full px-4 pb-4",
   bottomNavInner: "max-w-lg mx-auto",
   bottomNavBar: "bg-white/95 dark:bg-zinc-900/95 backdrop-blur-sm border border-zinc-200 dark:border-zinc-800 px-2 py-2 flex items-center gap-2 shadow-2xl shadow-zinc-200/40 dark:shadow-black/40 rounded-xl",
-  bottomNavGrid: "grid grid-cols-6 gap-1 flex-1",
+  bottomNavGrid: "grid grid-cols-7 gap-1 flex-1",
   bottomNavLink: "p-2 rounded-lg transition-all duration-200 flex items-center justify-center",
   bottomNavLinkActive: "text-zinc-900 dark:text-zinc-50 bg-zinc-100 dark:bg-zinc-800",
   bottomNavLinkInactive: "text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800/50",
@@ -426,4 +426,23 @@ export const sidebarStyles = {
   bottomNavDivider: "h-6 w-px bg-zinc-200 dark:bg-zinc-800",
   bottomMenuButton: "p-2 rounded-lg text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800/50 transition-colors",
   bottomMenuIcon: "w-4 h-4",
+};
+
+export const divisiStyles = {
+  pageContainer: "flex min-h-screen w-full justify-center bg-white/40 dark:bg-transparent px-5 pt-20 pb-28 sm:px-6 md:px-12 md:py-20 md:pb-20 lg:px-16",
+  innerContainer: "w-full max-w-6xl",
+
+  header: "mb-8 sm:mb-12",
+  pageTitle: "text-3xl font-bold text-zinc-900 dark:text-zinc-100 sm:text-4xl md:text-5xl",
+  pageSubtitle: "mt-2 text-zinc-500 dark:text-zinc-400",
+
+  membersGrid: "grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3",
+
+  memberCard: "group flex items-center gap-4 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/40 p-4 transition-all duration-300 hover:-translate-y-1 hover:border-blue-300 dark:hover:border-blue-700/60 hover:bg-zinc-100 dark:hover:bg-zinc-900/70 hover:shadow-lg",
+  memberAvatar: "flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-violet-600 text-sm font-semibold text-white shadow-md transition-transform duration-300 group-hover:scale-110",
+  memberInfo: "min-w-0 flex-1",
+  memberName: "block w-full truncate text-left font-medium text-zinc-900 dark:text-zinc-100 cursor-pointer hover:text-blue-600 dark:hover:text-blue-400 hover:underline underline-offset-4",
+  memberRole: "truncate text-xs text-zinc-500 dark:text-zinc-400",
+
+  divisionBadge: "ml-auto flex-shrink-0 rounded-full bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 px-2 py-0.5 text-xs font-medium text-zinc-600 dark:text-zinc-300",
 };

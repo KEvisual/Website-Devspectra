@@ -9,7 +9,7 @@ export type TeamMember = {
   role: string;
   initials: string;
   email: string;
-  category: "developer" | "media";
+  category: "developer" | "media" | "marketing";
   /** false = sembunyikan dari dropdown Anggota Tim di form Contact (misal: Owner) */
   contactVisible?: boolean;
 };
