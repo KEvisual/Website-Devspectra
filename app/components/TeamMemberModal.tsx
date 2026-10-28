@@ -12,6 +12,8 @@ export type TeamMember = {
   category: "developer" | "media" | "marketing";
   /** false = sembunyikan dari dropdown Anggota Tim di form Contact (misal: Owner) */
   contactVisible?: boolean;
+  /** false = sembunyikan dari halaman Divisi */
+  divisiVisible?: boolean;
 };
 
 const CloseIcon = () => (

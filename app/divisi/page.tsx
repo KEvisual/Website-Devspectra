@@ -29,8 +29,8 @@ function DivisiContent() {
   const triggerRef                 = useRef<HTMLElement | null>(null);
 
   const visible = active
-    ? team.filter((m) => divisionMap[active]?.includes(m.category))
-    : team;
+    ? team.filter((m) => divisionMap[active]?.includes(m.category) && m.divisiVisible !== false)
+    : team.filter((m) => m.divisiVisible !== false);
 
   return (
     <div className={d.pageContainer}>

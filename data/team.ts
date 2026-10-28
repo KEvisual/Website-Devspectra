@@ -7,9 +7,9 @@ import type { TeamMember } from "@/app/components/TeamMemberModal";
 //   - "media"      → Pilot Drone, Editing, Desain, Fotografer, Videografer
 //   - "marketing"  → Marketing / promosi
 export const team: TeamMember[] = [
-  { id: "karol-purba", name: "Karol Efrido Sanggam Purba", role: "Founder of Devspectra & Head Devspectra Bandung", initials: "KE", email: "karol@devspectra.com", category: "developer", contactVisible: false },
-  { id: "zhahir-furqon", name: "Zhahir Furqon", role: "Manajer & Head Devspectra Jakarta", initials: "ZF", email: "zhahir@devspectra.com", category: "developer" },
-  { id: "cintya-silvana", name: "Cintya Silvana", role: "Secretary Devspectra & Developer", initials: "CS", email: "cintya@devspectra.com", category: "developer" },
+  { id: "karol-purba",      name: "Karol Efrido Sanggam Purba", role: "Founder of Devspectra & Head Devspectra Bandung", initials: "KE", email: "karol@devspectra.com",  category: "developer",  contactVisible: false, divisiVisible: false },
+  { id: "zhahir-furqon",    name: "Zhahir Furqon",              role: "Manajer & Head Devspectra Jakarta",              initials: "ZF", email: "zhahir@devspectra.com", category: "developer",  divisiVisible: false },
+  { id: "cintya-silvana",   name: "Cintya Silvana",             role: "Secretary Devspectra & Developer",               initials: "CS", email: "cintya@devspectra.com", category: "developer",  divisiVisible: false },
   { id: "bagus-wibowo", name: "Bagus Wibowo", role: "Developer of Devspectra", initials: "BW", email: "bagus@devspectra.com", category: "developer" },
   { id: "adrian-ferdiansyah", name: "Adrian Ferdiansyah", role: "Pilot Drone & Head of Media Division", initials: "AF", email: "adrian@devspectra.com", category: "media" },
   { id: "rafi-arrusy", name: "Rafi Ar-Rusy", role: "Media Member & Editor Section of Devspectra", initials: "RA", email: "rafi@devspectra.com", category: "media" },

@@ -31,6 +31,7 @@ function ProjectNavItem({
   navIcon,
   navLabel,
   navItem,
+  onClose,
 }: {
   href: string;
   label: string;
@@ -40,6 +41,7 @@ function ProjectNavItem({
   navItemInactive: string;
   navIcon: string;
   navLabel: string;
+  onClose?: () => void;
 }) {
   const pathname   = usePathname();
   const params     = useSearchParams();
@@ -61,6 +63,7 @@ function ProjectNavItem({
           href="/projects"
           aria-current={isRootActive ? "page" : undefined}
           className="flex flex-1 items-center gap-3 px-3 py-3"
+          onClick={onClose}
         >
           <Icon className={navIcon} />
           <span className={navLabel}>{label}</span>
@@ -88,6 +91,7 @@ function ProjectNavItem({
               <li key={cat.value}>
                 <Link
                   href={`/projects?category=${cat.value}`}
+                  onClick={onClose}
                   className={`flex items-center gap-2 rounded-md px-2 py-1.5 text-xs font-medium transition-all duration-150
                     ${isActive
                       ? "bg-zinc-800 dark:bg-zinc-200 text-zinc-100 dark:text-zinc-900"
@@ -118,6 +122,7 @@ function ProjectFilterInner(props: {
   navItemInactive: string;
   navIcon: string;
   navLabel: string;
+  onClose?: () => void;
 }) {
   return <ProjectNavItem {...props} />;
 }
@@ -131,6 +136,7 @@ export default function ProjectFilter(props: {
   navItemInactive: string;
   navIcon: string;
   navLabel: string;
+  onClose?: () => void;
 }) {
   return (
     <Suspense fallback={

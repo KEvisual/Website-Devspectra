@@ -284,6 +284,7 @@ export default function Sidebar(): React.ReactElement {
                           navItemInactive={s.navItemInactive}
                           navIcon={s.mobileNavIcon}
                           navLabel={s.mobileNavLabel}
+                          onClose={() => setIsMobileMenuOpen(false)}
                         />
                       ) : href === "/divisi" ? (
                         <DivisiFilter
@@ -295,6 +296,7 @@ export default function Sidebar(): React.ReactElement {
                           navItemInactive={s.navItemInactive}
                           navIcon={s.mobileNavIcon}
                           navLabel={s.mobileNavLabel}
+                          onClose={() => setIsMobileMenuOpen(false)}
                         />
                       ) : (
                         <Link
@@ -345,48 +347,6 @@ export default function Sidebar(): React.ReactElement {
             </div>
         </div>
 
-        {/* Mobile bottom navigation */}
-        <div className={s.bottomNav}>
-          <div className={s.bottomNavContainer}>
-            <div className={s.bottomNavInner}>
-              <div className={s.bottomNavBar}>
-                <div className={s.bottomNavGrid}>
-                  {navItems.map(({ href, label, Icon }) => (
-                    <Link
-                      key={href}
-                      href={href}
-                      aria-label={label}
-                      className={`${s.bottomNavLink} ${pathname === href ? s.bottomNavLinkActive : s.bottomNavLinkInactive}`}
-                      aria-current={pathname === href ? "page" : undefined}
-                    >
-                      <Icon className={s.bottomNavIcon} />
-                    </Link>
-                  ))}
-                </div>
-                <div className={s.bottomNavDivider} />
-                {/* Login icon di bottom nav */}
-                <Link
-                  href="/login"
-                  aria-label="Login Admin"
-                  className={`${s.bottomNavLink} ${pathname === "/login" ? s.bottomNavLinkActive : s.bottomNavLinkInactive}`}
-                >
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className={s.bottomNavIcon} aria-hidden="true">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
-                  </svg>
-                </Link>
-                <div className={s.bottomNavDivider} />
-                <button
-                  type="button"
-                  aria-label="Open menu"
-                  className={`mobile-menu-toggle ${s.bottomMenuButton}`}
-                  onClick={() => setIsMobileMenuOpen(true)}
-                >
-                  <MenuIcon className={s.bottomMenuIcon} />
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
         </>
     );
 }

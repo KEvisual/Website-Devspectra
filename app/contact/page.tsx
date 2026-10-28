@@ -130,14 +130,19 @@ export default function Contact() {
         (form.jasa ? `\n\nJasa: ${form.jasa}` : "") +
         (form.anggota ? `\nAnggota Tim: ${form.anggota}` : "");
 
-      // 1. Kirim ke backend Spring Boot
-      await createInquiry({
-        name: form.name,
-        email: form.email,
-        phone: form.whatsapp ? `+62${form.whatsapp}` : undefined,
-        subject: form.subject,
-        message: enrichedMessage,
-      });
+      // 1. Kirim ke backend Spring Boot (opsional — tidak blokir form jika backend mati)
+      try {
+        await createInquiry({
+          name: form.name,
+          email: form.email,
+          phone: form.whatsapp ? `+62${form.whatsapp}` : undefined,
+          subject: form.subject,
+          message: enrichedMessage,
+        });
+      } catch {
+        // Spring Boot tidak aktif — lanjutkan ke email tetap
+        console.warn("Spring Boot backend tidak tersedia, melanjutkan via email.");
+      }
 
       // 2. Kirim email notifikasi via Next.js API (tetap jalan)
       const res = await fetch("/api/contact", {
@@ -610,14 +615,14 @@ export default function Contact() {
               <button
                 type="button"
                 onClick={() => setQrisOpen((prev) => !prev)}
-                className="flex w-full items-center justify-between px-6 py-4 text-left transition hover:bg-zinc-100 dark:hover:bg-zinc-800/40"
+                className="flex w-full items-start justify-between gap-3 px-4 py-4 text-left transition hover:bg-zinc-100 dark:hover:bg-zinc-800/40 sm:px-6"
               >
-                <div>
+                <div className="min-w-0">
                   <h3 className="text-base font-bold text-zinc-900 dark:text-zinc-100">💳 Pembayaran QRIS</h3>
                   <p className="mt-0.5 text-sm text-zinc-500 dark:text-zinc-400">Cek status pembayaran setelah proyek selesai.</p>
                 </div>
                 <ChevronDownIcon
-                  className={`h-5 w-5 text-zinc-400 transition-transform duration-200 ${
+                  className={`mt-0.5 h-5 w-5 flex-shrink-0 text-zinc-400 transition-transform duration-200 ${
                     qrisOpen ? "rotate-180" : ""
                   }`}
                 />
@@ -625,14 +630,15 @@ export default function Contact() {
 
               {/* Collapsible body */}
               {qrisOpen && (
-                <div className="border-t border-zinc-200 dark:border-zinc-800 px-6 py-6 space-y-4">
-                  <div className="flex gap-3">
+                <div className="border-t border-zinc-200 dark:border-zinc-800 px-4 py-5 space-y-4 sm:px-6 sm:py-6">
+                  {/* Input + tombol — stack di mobile, sejajar di sm+ */}
+                  <div className="flex flex-col gap-3 sm:flex-row">
                     <input
                       type="text"
                       value={qrisOrderId}
                       onChange={(e) => setQrisOrderId(e.target.value)}
-                      placeholder="Masukkan Order ID, contoh: DSP-BLM5XPQO"
-                      className="flex-1 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 px-4 py-3 text-sm text-zinc-900 dark:text-zinc-100 outline-none transition placeholder:text-zinc-400 dark:placeholder:text-zinc-500 focus:border-zinc-400 dark:focus:border-zinc-600 focus:ring-1 focus:ring-zinc-400 dark:focus:ring-zinc-600"
+                      placeholder="Contoh: DSP-BLM5XPQO"
+                      className="w-full rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 px-4 py-3 text-sm text-zinc-900 dark:text-zinc-100 outline-none transition placeholder:text-zinc-400 dark:placeholder:text-zinc-500 focus:border-zinc-400 dark:focus:border-zinc-600 focus:ring-1 focus:ring-zinc-400 dark:focus:ring-zinc-600 sm:flex-1"
                     />
                     <button
                       type="button"
@@ -640,7 +646,7 @@ export default function Contact() {
                         const found = getOrder(qrisOrderId.trim());
                         setQrisResult(found ?? "notfound");
                       }}
-                      className="rounded-xl bg-zinc-900 dark:bg-zinc-100 px-5 py-3 text-sm font-semibold text-zinc-100 dark:text-zinc-900 transition-all hover:bg-zinc-700 dark:hover:bg-zinc-200 active:scale-95"
+                      className="w-full rounded-xl bg-zinc-900 dark:bg-zinc-100 px-5 py-3 text-sm font-semibold text-zinc-100 dark:text-zinc-900 transition-all hover:bg-zinc-700 dark:hover:bg-zinc-200 active:scale-95 sm:w-auto sm:flex-shrink-0"
                     >
                       Cek Status
                     </button>

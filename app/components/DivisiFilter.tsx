@@ -32,6 +32,7 @@ function DivisiNavItem({
   navIcon,
   navLabel,
   navItem,
+  onClose,
 }: {
   href: string;
   label: string;
@@ -41,6 +42,7 @@ function DivisiNavItem({
   navItemInactive: string;
   navIcon: string;
   navLabel: string;
+  onClose?: () => void;
 }) {
   const pathname = usePathname();
   const params   = useSearchParams();
@@ -64,6 +66,7 @@ function DivisiNavItem({
           href="/divisi"
           aria-current={isRootActive ? "page" : undefined}
           className="flex flex-1 items-center gap-3 px-3 py-3"
+          onClick={onClose}
         >
           <Icon className={navIcon} />
           <span className={`${navLabel} truncate`}>{label}</span>
@@ -91,6 +94,7 @@ function DivisiNavItem({
               <li key={div.value}>
                 <Link
                   href={`/divisi?division=${div.value}`}
+                  onClick={onClose}
                   className={`flex items-center gap-2 rounded-md px-2 py-1.5 text-xs font-medium transition-all duration-150
                     ${isActive
                       ? "bg-zinc-800 dark:bg-zinc-200 text-zinc-100 dark:text-zinc-900"
@@ -121,6 +125,7 @@ function DivisiFilterInner(props: {
   navItemInactive: string;
   navIcon: string;
   navLabel: string;
+  onClose?: () => void;
 }) {
   return <DivisiNavItem {...props} />;
 }
@@ -134,6 +139,7 @@ export default function DivisiFilter(props: {
   navItemInactive: string;
   navIcon: string;
   navLabel: string;
+  onClose?: () => void;
 }) {
   return (
     <Suspense fallback={
